@@ -14,7 +14,7 @@
             color="white"
             text-color="black"
             label="刪除"
-            @click="isModalOpen = true"
+            @click="handleOpenModal"
           />
         </div>
       </div>
@@ -54,7 +54,7 @@
             flat
             color="primary"
             icon="search"
-            @click="handleSearchEmployee"
+            @click="handleSearchEmployees"
           />
         </div>
       </div>
@@ -104,8 +104,8 @@
 
 <script>
 import { ref, reactive, onMounted } from 'vue';
-import QTable from 'src/components/QTable.vue';
 import { api } from '../boot/axios';
+import QTable from 'src/components/QTable.vue';
 
 export default {
   name: 'IndexPage',
@@ -167,6 +167,10 @@ export default {
     const gender = reactive(['男', '女']);
     const isModalOpen = ref(false);
 
+    function handleOpenModal() {
+      isModalOpen.value = true;
+    }
+
     function formateDate(date) {
       const [yyyymmdd] = date.split('T');
       const [year, month, day] = yyyymmdd.split('-');
@@ -211,7 +215,7 @@ export default {
       return res.data.members;
     }
 
-    async function handleSearchEmployee() {
+    async function handleSearchEmployees() {
       try {
         const employees = await fetchFilterEmployees();
         state.rows = formateEmployees(employees);
@@ -240,9 +244,10 @@ export default {
       search,
       gender,
       isModalOpen,
+      handleOpenModal,
       handleAddEmployee,
       handleDeleteEmployee,
-      handleSearchEmployee
+      handleSearchEmployees
     }
   }
 };
