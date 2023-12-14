@@ -200,8 +200,8 @@ export default {
     }
 
     function handleDeleteEmployee() {
-      const selectedNames = selected.value.map(employee => employee.name);
-      const filteredEmployees = state.rows.filter(employee => !selectedNames.includes(employee.name));
+      const selectedNames = selected.value.map((employee) => employee.name);
+      const filteredEmployees = state.rows.filter((employee) => !selectedNames.includes(employee.name));
       state.rows = filteredEmployees;
       selected.value = [];
     }
