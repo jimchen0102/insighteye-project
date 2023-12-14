@@ -19,7 +19,10 @@
         </div>
       </div>
 
-      <div class="row items-center q-mt-sm">
+      <form
+        class="row items-center q-mt-sm"
+        @submit.prevent="handleSearchEmployees"
+      >
         <div class="col-11">
           <div class="row">
             <div class="col-3">
@@ -51,13 +54,13 @@
         </div>
         <div class="col-1">
           <q-btn
+            type="submit"
             flat
             color="primary"
             icon="search"
-            @click="handleSearchEmployees"
           />
         </div>
-      </div>
+      </form>
 
       <QTable
         :columns="state.columns"
