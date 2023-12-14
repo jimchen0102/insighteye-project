@@ -119,7 +119,7 @@
 
 <script>
 import { ref, reactive, onMounted } from 'vue';
-import { api } from '../boot/axios';
+import { api } from 'src/boot/axios';
 import QTable from 'src/components/QTable.vue';
 
 export default {
