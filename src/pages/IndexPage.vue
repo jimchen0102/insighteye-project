@@ -23,27 +23,27 @@
         class="row items-center q-mt-sm"
         @submit.prevent="handleSearchEmployees"
       >
-        <div class="col-11">
+        <div class="col">
           <div class="row">
-            <div class="col-3">
+            <div class="col-6 col-sm">
               <q-input
                 v-model="search.name"
                 label="姓名"
               />
             </div>
-            <div class="col-3">
+            <div class="col-6 col-sm">
               <q-input
                 v-model="search.cellphone"
                 label="手機"
               />
             </div>
-            <div class="col-3">
+            <div class="col-6 col-sm">
               <q-input
                 v-model="search.email"
                 label="信箱"
               />
             </div>
-            <div class="col-3">
+            <div class="col-6 col-sm">
               <q-select
                 v-model="search.gender"
                 :options="gender"
@@ -52,7 +52,7 @@
             </div>
           </div>
         </div>
-        <div class="col-1">
+        <div class="col-auto">
           <q-btn
             type="submit"
             flat
@@ -87,12 +87,12 @@
 
           <q-card-actions align="center">
             <q-btn
-              color="white"
-              text-color="black"
+              flat
               label="取消"
               v-close-popup
             />
             <q-btn
+              flat
               color="primary"
               label="確定"
               v-close-popup
@@ -258,6 +258,8 @@ export default {
 
 <style lang="scss" scoped>
 .block-item {
-  min-width: 400px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
 }
 </style>
