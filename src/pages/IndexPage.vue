@@ -19,48 +19,60 @@
         </div>
       </div>
 
-      <form
-        class="row items-center q-mt-sm"
-        @submit.prevent="handleSearchEmployees"
+      <q-form
+        class="q-mt-sm"
+        @submit="handleSearchEmployees"
+        @reset="handleResetEmployees"
       >
-        <div class="col">
-          <div class="row">
-            <div class="col-6 col-sm">
-              <q-input
-                v-model="search.name"
-                label="姓名"
-              />
-            </div>
-            <div class="col-6 col-sm">
-              <q-input
-                v-model="search.cellphone"
-                label="手機"
-              />
-            </div>
-            <div class="col-6 col-sm">
-              <q-input
-                v-model="search.email"
-                label="信箱"
-              />
-            </div>
-            <div class="col-6 col-sm">
-              <q-select
-                v-model="search.gender"
-                :options="gender"
-                label="性別"
-              />
+        <div class="row items-center q-gutter-md">
+          <div class="col">
+            <div class="row">
+              <div class="col-6 col-sm">
+                <q-input
+                  v-model="search.name"
+                  label="姓名"
+                />
+              </div>
+              <div class="col-6 col-sm">
+                <q-input
+                  v-model="search.cellphone"
+                  label="手機"
+                />
+              </div>
+              <div class="col-6 col-sm">
+                <q-input
+                  v-model="search.email"
+                  label="信箱"
+                />
+              </div>
+              <div class="col-6 col-sm">
+                <q-select
+                  v-model="search.gender"
+                  :options="gender"
+                  label="性別"
+                />
+              </div>
             </div>
           </div>
+          <div class="col-auto">
+            <q-btn
+              type="submit"
+              flat
+              round
+              color="primary"
+              icon="search"
+            />
+            <q-btn
+              type="reset"
+              class="q-ml-sm"
+              flat
+              round
+              color="grey"
+              icon="delete"
+            />
+          </div>
         </div>
-        <div class="col-auto">
-          <q-btn
-            type="submit"
-            flat
-            color="primary"
-            icon="search"
-          />
-        </div>
-      </form>
+      </q-form>
 
       <QTable
         :columns="state.columns"
@@ -161,7 +173,7 @@ export default {
       rows: [],
     });
     const selected = ref([]);
-    const search = reactive({
+    const search = ref({
       name: '',
       cellphone: '',
       email: '',
@@ -209,10 +221,10 @@ export default {
     async function fetchFilterEmployees() {
       const res = await api.post(`${BASE_URL}/members/search`, {
         filter: {
-          name: search.name,
-          cellphone: search.cellphone,
-          email: search.email,
-          gender: search.gender
+          name: search.value.name,
+          cellphone: search.value.cellphone,
+          email: search.value.email,
+          gender: search.value.gender
         }
       });
       return res.data.members;
@@ -225,6 +237,16 @@ export default {
       } catch (error) {
         throw new Error(error);
       }
+    }
+
+    function handleResetEmployees() {
+      search.value = {
+        name: '',
+        cellphone: '',
+        email: '',
+        gender: ''
+      };
+      handleSearchEmployees();
     }
 
     async function fetchEmployees() {
@@ -247,6 +269,7 @@ export default {
       search,
       gender,
       isModalOpen,
+      handleResetEmployees,
       handleOpenModal,
       handleAddEmployee,
       handleDeleteEmployee,
