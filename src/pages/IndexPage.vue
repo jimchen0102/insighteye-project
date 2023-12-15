@@ -21,8 +21,8 @@
 
       <q-form
         class="q-mt-sm"
-        @submit="handleSearchEmployees"
         @reset="handleResetEmployees"
+        @submit="handleSearchEmployees"
       >
         <div class="row items-center q-gutter-md">
           <div class="col">
@@ -177,7 +177,7 @@ export default {
       name: '',
       cellphone: '',
       email: '',
-      gender: ''
+      gender: '',
     });
     const gender = reactive(['男', '女']);
     const isModalOpen = ref(false);
@@ -197,7 +197,7 @@ export default {
     function formateEmployees(employees) {
       return employees.map((employee) => ({
         ...employee,
-        birthday: formateDate(employee.birthday)
+        birthday: formateDate(employee.birthday),
       }));
     }
 
@@ -207,7 +207,7 @@ export default {
         cellphone: '',
         email: '',
         gender: '',
-        birthday: ''
+        birthday: '',
       });
     }
 
@@ -224,8 +224,8 @@ export default {
           name: search.value.name,
           cellphone: search.value.cellphone,
           email: search.value.email,
-          gender: search.value.gender
-        }
+          gender: search.value.gender,
+        },
       });
       return res.data.members;
     }
@@ -244,7 +244,7 @@ export default {
         name: '',
         cellphone: '',
         email: '',
-        gender: ''
+        gender: '',
       };
       handleSearchEmployees();
     }
@@ -269,13 +269,13 @@ export default {
       search,
       gender,
       isModalOpen,
-      handleResetEmployees,
       handleOpenModal,
       handleAddEmployee,
       handleDeleteEmployee,
-      handleSearchEmployees
-    }
-  }
+      handleSearchEmployees,
+      handleResetEmployees,
+    };
+  },
 };
 </script>
 
