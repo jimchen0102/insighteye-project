@@ -18,61 +18,8 @@
           />
         </div>
       </div>
-
-      <q-form
-        class="q-mt-sm"
-        @reset="handleResetEmployees"
-        @submit="handleSearchEmployees"
-      >
-        <div class="row items-center q-gutter-md">
-          <div class="col">
-            <div class="row">
-              <div class="col-6 col-sm">
-                <q-input
-                  v-model="search.name"
-                  label="姓名"
-                />
-              </div>
-              <div class="col-6 col-sm">
-                <q-input
-                  v-model="search.cellphone"
-                  label="手機"
-                />
-              </div>
-              <div class="col-6 col-sm">
-                <q-input
-                  v-model="search.email"
-                  label="信箱"
-                />
-              </div>
-              <div class="col-6 col-sm">
-                <q-select
-                  v-model="search.gender"
-                  :options="gender"
-                  label="性別"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="col-auto">
-            <q-btn
-              type="submit"
-              flat
-              round
-              color="primary"
-              icon="search"
-            />
-            <q-btn
-              type="reset"
-              class="q-ml-sm"
-              flat
-              round
-              color="grey"
-              icon="delete"
-            />
-          </div>
-        </div>
-      </q-form>
+      
+      <QForm @submit="handleSearchEmployees" />
 
       <QTable
         :columns="state.columns"
@@ -80,39 +27,11 @@
         v-model:selected="selected"
       />
 
-      <q-dialog v-model="isModalOpen">
-        <q-card style="width: 360px">
-          <q-card-section>
-            <div class="text-h6 text-center">刪除</div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <p class="text-center">
-              <template v-if="selected.length > 0">
-                是否確定刪除 {{ selected.length }} 筆資料
-              </template>
-              <template v-else>
-                尚未選取刪除的資料
-              </template>
-            </p>
-          </q-card-section>
-
-          <q-card-actions align="center">
-            <q-btn
-              flat
-              label="取消"
-              v-close-popup
-            />
-            <q-btn
-              flat
-              color="primary"
-              label="確定"
-              v-close-popup
-              @click="handleDeleteEmployee"
-            />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
+      <QDialog
+        :selected="selected"
+        v-model="isModalOpen"
+        @delete="handleDeleteEmployee"
+      />
     </div>
   </q-page>
 </template>
@@ -120,13 +39,17 @@
 <script>
 import { ref, reactive, onMounted } from 'vue';
 import { api } from 'src/boot/axios';
+import QForm from 'src/components/QForm.vue';
 import QTable from 'src/components/QTable.vue';
+import QDialog from 'src/components/QDialog.vue';
 
 export default {
   name: 'IndexPage',
 
   components: {
-    QTable
+    QForm,
+    QTable,
+    QDialog,
   },
 
   setup () {
@@ -173,13 +96,6 @@ export default {
       rows: [],
     });
     const selected = ref([]);
-    const search = ref({
-      name: '',
-      cellphone: '',
-      email: '',
-      gender: '',
-    });
-    const gender = reactive(['男', '女']);
     const isModalOpen = ref(false);
 
     function handleOpenModal() {
@@ -203,7 +119,7 @@ export default {
 
     function handleAddEmployee() {
       state.rows.unshift({
-        name: '',
+        name: Date.now(),
         cellphone: '',
         email: '',
         gender: '',
@@ -218,35 +134,25 @@ export default {
       selected.value = [];
     }
 
-    async function fetchFilterEmployees() {
+    async function fetchFilterEmployees(search) {
       const res = await api.post(`${BASE_URL}/members/search`, {
         filter: {
-          name: search.value.name,
-          cellphone: search.value.cellphone,
-          email: search.value.email,
-          gender: search.value.gender,
+          name: search.name,
+          cellphone: search.cellphone,
+          email: search.email,
+          gender: search.gender,
         },
       });
       return res.data.members;
     }
 
-    async function handleSearchEmployees() {
+    async function handleSearchEmployees(search) {
       try {
-        const employees = await fetchFilterEmployees();
+        const employees = await fetchFilterEmployees(search);
         state.rows = formateEmployees(employees);
       } catch (error) {
         throw new Error(error);
       }
-    }
-
-    function handleResetEmployees() {
-      search.value = {
-        name: '',
-        cellphone: '',
-        email: '',
-        gender: '',
-      };
-      handleSearchEmployees();
     }
 
     async function fetchEmployees() {
@@ -266,14 +172,11 @@ export default {
     return {
       state,
       selected,
-      search,
-      gender,
       isModalOpen,
       handleOpenModal,
       handleAddEmployee,
       handleDeleteEmployee,
       handleSearchEmployees,
-      handleResetEmployees,
     };
   },
 };
