@@ -103,8 +103,8 @@ export default {
     }
 
     function formateDate(date) {
-      const [yyyymmdd] = date.split('T');
-      const [year, month, day] = yyyymmdd.split('-');
+      const [currentDate] = date.split('T');
+      const [year, month, day] = currentDate.split('-');
       const formateMonth = month.length === 1 ? `0${month}` : month;
       const formateDay = day.length === 1 ? `0${day}` : day;
       return `${year}/${formateMonth}/${formateDay}`;
